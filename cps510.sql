@@ -50,9 +50,11 @@ CREATE TABLE fine(
     );
 
 CREATE TABLE bookClub(
+    start_date DATE,
+    end_date DATE,
     mem_name VARCHAR(25) NOT NULL,
     b_title VARCHAR(25),
-    meeting_date DATE
+    meeting_date VARCHAR(25)
     );
     
 INSERT INTO member(mem_id, mem_name, mem_age) VALUES (123, 'John', 25);
@@ -63,7 +65,7 @@ INSERT INTO member(mem_id, mem_name, mem_age) VALUES (098, 'Jim', NULL);
 
 INSERT INTO book(isbn, b_author, b_title, b_genre, b_count, b_minAge, pub_name, pub_location, pub_date) VALUES (1111, 'Edith Wharton', 'House of Mirth', 'novel', 5, 0,'Scholastic','New York',TO_DATE('1905/10/14','yyyy/mm/dd')); 
 INSERT INTO book(isbn, b_author, b_title, b_genre, b_count, b_minAge, pub_name, pub_location, pub_date) VALUES (2222, 'Dmitry Glukhovsky', 'Metro 2033', 'science fiction novel', 2, 13,'Gollancz','Moscow',TO_DATE('2010/03/18','yyyy/mm/dd')); 
-INSERT INTO book(isbn, b_author, b_title, b_genre, b_count, b_minAge, pub_name, pub_location, pub_date) VALUES (3333, 'J.R.R Toilken', 'The Hobbit', 'fantasy novel', 10, 0,'George Allen & Unwin','London',TO_DATE('1937/09/21','yyyy/mm/dd')); 
+INSERT INTO book(isbn, b_author, b_title, b_genre, b_count, b_minAge, pub_name, pub_location, pub_date) VALUES (3333, 'J.R.R Toilken', 'The Hobbit', 'fantasy novel', 10, 0,'George Allen Unwin','London',TO_DATE('1937/09/21','yyyy/mm/dd')); 
 INSERT INTO book(isbn, b_author, b_title, b_genre, b_count, b_minAge, pub_name, pub_location, pub_date) VALUES (1111, 'George R. R. Martin', 'A Game of Thrones', 'fantasy novel', 3, 0,'Bantam Spectra','New York',TO_DATE('1996/08/01','yyyy/mm/dd'));
 
 INSERT INTO fine(mem_id, isbn, f_rate, r_date, d_date, f_amount) VALUES (123, 1111, 2.5, TO_DATE('2019/04/05','YYYY/MM/DD'), TO_DATE('2019/03/04','YYYY/MM/DD'), f_amount*(r_date-d_date));
@@ -74,4 +76,51 @@ INSERT INTO publisher(pub_name, pub_location) VALUES ('Gollancz','Moscow');
 INSERT INTO publisher(pub_name, pub_location) VALUES ('Bantam Spectra','New York');
 INSERT INTO publisher(pub_name, pub_location) VALUES ('George Allen Unwin','London');
 
+INSERT INTO bookClub(mem_name, b_title, start_date, end_date, meeting_date) VALUES ('Betty Smith', 'The Life of Pie', TO_DATE('2018/06/12','YYYY/MM/DD'), TO_DATE('2019/06/14','YYYY/MM/DD'), 'THU');
+INSERT INTO bookClub(mem_name, b_title, start_date, end_date, meeting_date) VALUES ('Jim Bob', 'The Hobbit', TO_DATE('2019/12/01', 'YYYY/MM/DD'), TO_DATE('2021/01/23','YYYY/MM/DD'), 'WED');
+INSERT INTO bookClub(mem_name, b_title, start_date, end_date, meeting_date) VALUES ('Dave Smith', 'The Hobbit', TO_DATE('2020/03/20','YYYY/MM/DD'), TO_DATE('2022/09/19','YYYY/MM/DD'), 'FRI');
+INSERT INTO bookClub(mem_name, b_title, start_date, end_date, meeting_date) VALUES ('Joe Clark', 'The Hobbit', TO_DATE('2019/10/10', 'YYYY/MM/DD'), TO_DATE('2020/06/09','YYYY/MM/DD'), 'SUN');
 
+/* QUERIES(7) */
+
+/* 1. members signed up for the hobbit book club */
+SELECT mem_name AS The_Hobbit_Book_Club_Members
+FROM bookClub
+WHERE b_title = 'The Hobbit';
+
+/* 2. books published by Scholastic */
+SELECT book.b_title AS Scholastic_Books
+FROM book
+WHERE pub_name = 'Scholastic';
+
+/* 3. Member name and name of book that is reserved */
+SELECT member.mem_name, book.b_title
+FROM member,book,reservation
+WHERE reservation.mem_id = member.mem_id
+AND reservation.isbn = book.isbn;
+
+/* 4. fantasy novel books in stock */
+SELECT book.b_author, book.b_title
+FROM book
+WHERE book.b_genre = 'fantasy novel';
+
+/* 5. list all the members who have fines above 0 */
+
+
+/* 6. List all American publishers */
+SELECT publisher.pub_name AS American_Publishers
+FROM publisher
+WHERE publisher.pub_location = 'New York' OR publisher.pub_location = 'Los Angeles';
+
+/* 7. books by publishers in moscow */
+SELECT publisher.pub_name,book.b_title AS Russian_Books
+FROM book,publisher
+WHERE book.pub_location = 'Moscow'
+AND book.pub_location = publisher.pub_location;
+
+/* VIEWS(2) */
+
+/* 1. A view about being able to check out books if members fine is below a certain amount */
+/* CREATE VIEW can_check_out_books AS */
+
+/* 2. A view about something else */
